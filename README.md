@@ -7,5 +7,5 @@ As Aulas serão ministradas por mim João Alexandre Tristão de Almeida
     As API foram pegas no site www.w3school.com
 
 ### AngularJs
-    O slide está sendo baseado no curso da Webschool BeMEAN.
+    O slide está sendo baseado no curso da Webschool BeMEAN - http://webschool.io/.
     Site oficial www.angularjs.org
