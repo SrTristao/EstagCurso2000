@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html ng-app="app">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+    </head>
+    <script src="../angular.min.js"></script>
+    <body>
+        <input type="text" ng-model="nome">
+        {{nome | noString}}
+    </body>
+    <script type="text/javascript">
+        angular.module('app' , [])
+            .filter('noString' , function () {
+                return function (texto) {
+                    return texto != undefined ? texto.replace(/\D/g , '') : texto;
+                }
+            });
+    </script>
+</html>
