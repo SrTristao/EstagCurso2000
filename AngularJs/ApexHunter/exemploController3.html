@@ -1,0 +1,57 @@
+<html ng-app='app'>
+    <head></head>
+    <script src="../angular.min.js"></script>
+    <body ng-controller="pessoasController as pessoasCtrl">
+        <div ng-controller="estagiariosController as estagCtrl">
+            <h1> {{estagCtrl.title}} </h1>
+        </div>
+        <h1> {{pessoasCtrl.title}} </h1>
+        <br/>
+        <br/>
+        <input ng-model="pessoasCtrl.nome"/>
+        {{pessoasCtrl.nome | noString}}
+        <ul>
+            <li ng-repeat="pessoa in pessoasCtrl.listaPessoas | filter: searchPessoa">{{$index}} - {{pessoa}}
+                <buttonn ng-click="pessoasCtrl.deletaPessoa($index)">;
+            </li>
+        </ul>
+    </body>
+    <script>
+        angular.module('app',[])
+            .filter('noString',function() {
+                return function(texto) {
+                    return texto != undefined ? 
+                        texto.replace(/\d/g,'').toUpperCase() : texto;
+            }
+        })
+        .controller('pessoasController',pessoasController)
+        .controller('estagiariosController',estagiariosController);
+
+        function estagiariosController() {
+            var vm = this;
+            vm.title = 'Curso';
+        }
+
+        function pessoasController() {
+            var vm = this;
+            vm.listaPessoas = ['Guilherme', 'Vitor', 'Matheus','Rafael','Joao'];
+            vm.title = 'EstagCurso2000';
+            $scope.$watch(vm.nome,function() {
+                console.log(vm.nome);
+            });
+
+            vm.deletaPessoa = function (index){
+                vm.listaPessoas = vm.listaPessoas.forEach(function(param){
+                    if (param != vm.listaPessoas[index]){
+                        return param;
+                    }
+                })
+            }
+
+            var printNome = function() {
+                console.log(vm.nome);
+            }
+        }
+
+    </script>
+</html>
