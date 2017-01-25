@@ -2,11 +2,8 @@
     <head></head>
     <script src="../angular.min.js"></script>
     <body ng-controller="pessoasController">
-        <div ng-controller="estagiariosController">
-            <h1> {{title}} </h1>
-        </div>
         <h1> {{title}} </h1>
-        <input ng-model="nome"/>
+        <input data-ng-model="nome"/>
         {{nome | noString}}
     </body>
     <script>
@@ -17,11 +14,12 @@
                         texto.replace(/\d/g,'').toUpperCase() : texto;
             }
         })
-        .controller('pessoasController',['$scope',function($scope){
-            $scope.title = 'EstagCurso2000';
-        }])
-        .controller('estagiariosController',['$scope',function($scope){
-            $scope.title = 'Controller Estag';
-        }])
+        .controller('pessoasController', pessoasController);
+        
+        function pessoasController($scope) {
+            $scope.title = "EstagCurso2000"
+        }
+
+        pessoasController['$inject'] = ['$scope']
     </script>
 </html>

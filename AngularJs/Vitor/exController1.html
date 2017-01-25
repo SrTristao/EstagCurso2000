@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html ng-app="app">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+    </head>
+    <script src="../angular.min.js"></script>
+
+    <body ng-controller="pessoasController">
+        <h1>{{title}}</h1>
+
+        <div ng-controller="estagiariosController">
+            <h2>{{curso}}</h2>
+        </div>
+
+        <input type="text" ng-model="nome">
+        {{nome | noString}}
+    </body>
+
+    <script type="text/javascript">
+        angular.module('app' , [])
+            .filter('noString' , function () {
+                return function (texto) {
+                    return texto != undefined ? texto.replace(/\D/g , '') : texto;
+                }
+            })
+            .controller('pessoasController' , ['$scope' , function ($scope) {
+                $scope.title = 'EstagCurso2000';
+            }])
+            .controller('estagiariosController' , ['$scope' , function ($scope) {
+                $scope.curso = 'ADS';
+            }])
+    </script>
+</html>
