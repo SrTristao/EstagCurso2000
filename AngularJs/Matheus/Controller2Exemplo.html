@@ -3,13 +3,7 @@
 	<head> 	</head>
 	<script src="../angular.min.js"></script>
 	<body ng-controller = "pessoaController">
-
 		<h1> {{title}} </h1>
-
-		<div ng-controller = "estagiarioController">
-			<h1> {{curso}}</h1>
-		</div>
-
 		<input ng-model="nome"/>
 		{{nome | noString}}
 
@@ -22,14 +16,13 @@
 	  	  		return texto != undefined ? texto.replace(/\D/g,'') : texto;
 	   		}
 	   })
-	   .controller('pessoaController',['$scope',function($scope){
-	   		$scope.title = 'EstagCurso2000';
+	   .controller('pessoaController', pessoaController);
 
-	   }])
-	   .controller('estagiarioController',['$scope',function($scope){
-	   		$scope.curso = 'Controller Estag';
+	   function pessoaController($scope){
+	   	$scope.title = 'EstagCurso2000'
+	   }
 
-	   }]);
+	   pessoaController['$inject']=['$scope'];
 	</script>
 
 </html>
