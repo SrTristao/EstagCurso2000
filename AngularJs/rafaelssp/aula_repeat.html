@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html ng-app="app">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+    </head>
+    <script src="../angular.min.js"></script>
+
+    <body ng-controller="pessoasController as vm">
+        <h1 ng-model="vm.title"></h1>
+
+        <input type="text" ng-model="vm.nome">
+        {{vm.nome | noString}}
+        <br />
+        <input ng-model="searchPessoa"/>
+        <ul>
+            <li ng-repeat="pessoa in vm.pessoas | filter: searchPessoa" ng-click="vm.deletaPessoa($index)">
+                {{$index}} - {{pessoa}}
+            </li>
+        </ul>
+    </body>
+
+    <script type="text/javascript">
+        angular.module('app' , [])
+            .filter('noString' , function () {
+                return function (texto) {
+                    return texto != undefined ? texto.replace(/\D/g , '') : texto;
+                }
+            })
+            .controller('pessoasController' , pessoasController);
+
+        function pessoasController($scope) {
+            var vm = this;
+            vm.title = 'EstagCurso2000';
+
+            vm.pessoas = ['joao' , 'mario' , 'rafael' , 'matheus'];
+
+            vm.deletaPessoa = function (index) {
+                vm.pessoas = vm.pessoas.filter(function (param) {
+                    if(param != vm.pessoas[index]) {
+                        return param;
+                    }
+                });
+            };
+        }
+
+
+    </script>
+</html>
