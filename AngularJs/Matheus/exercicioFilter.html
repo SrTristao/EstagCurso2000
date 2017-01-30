@@ -1,0 +1,30 @@
+<html ng-app='app' style="background-color:lightgray">
+
+	<head> 	</head>
+	<script src="../angular.min.js"></script>
+	<body ng-controller = "pessoaController as ctrl">
+		<h1> {{ctrl.title}} </h1>
+		<input ng-model="ctrl.nome"/>
+		{{ctrl.nome | noNumeric}} 
+	</body>
+
+	<script> 
+	   angular.module('app',[])
+	   .filter('noNumeric',function(){
+	   		return function(texto){
+	  	  		return texto != undefined ? texto.replace(/\d/g,'') : texto;
+	   		}
+	   })
+	   .controller('pessoaController', pessoaController);
+
+	   function pessoaController($scope){
+	   		var vm = this;
+	   		vm.title = 'EstagCurso2000';
+	   		
+	   }
+
+	
+	</script>
+
+</html>
+ 

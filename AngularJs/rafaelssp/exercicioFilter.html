@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html ng-app="App">
+    <head>
+      <meta charset="utf-8">
+      <link rel="stylesheet" href="../bootstrap.min.css">
+        <title></title>
+    </head>
+    <script src="../angular.min.js"></script>
+    <body>
+      <h2>Filtrando os dados inseridos no input</h2>
+        <input type="text" ng-model="nome">
+        {{nome | onlyLetterAndSpace}}
+    </body>
+    <script type="text/javascript">
+        angular.module('App' , [])
+            .filter('onlyLetterAndSpace' , function () {
+                return function (texto) {
+                    return texto != undefined ? texto.replace(/[^a-z[\b]]/g , '').toUpperCase() : texto;
+                }
+            });
+    </script>
+</html>
