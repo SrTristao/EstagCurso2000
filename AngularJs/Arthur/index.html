@@ -13,13 +13,17 @@
             font-size: 23px;
             margin-bottom: 10px;
         }
+        .corLinha{
+            color: red;
+            background-color:blue;
+        }
     </style>
     <body ng-controller="colaboradoresController as vm">
     <label col-lg-offset-5"
            ng-class="{'title-app': vm.colaborador.nome, 'title-app2': vm.colaborador.email}">EstagCurso2000</label>
         <div class="conteiner">
             <div class="row">
-                <form class="col-lg-6 col-lg-offset-3" ng-init="vm.colaborador = {nome:'', email:''};">
+                <form class="col-lg-6 col-lg-offset-3" ng-init="vm.colaborador = {nome:'', email:'', checado:''};">
                     <div class="form-group">
                         <label for="nome">Nome: </label>
                         <input type="text" class="form-control" id="nome" placeholder="Digite o nome do colaborador" 
@@ -52,6 +56,7 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
+                                <th>Excluir</th>
                                 <th>Nome</th>
                                 <th>Email</th>
                                 <th></th>
@@ -59,12 +64,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <tr ng-repeat="colaborador in vm.listaColaboradores | filter:vm.searchColaborador">
+                            <tr  ng-repeat="colaborador in vm.listaColaboradores | filter:vm.searchColaborador" ng-class="{'corLinha':colaborador.checado}">
+                                <td><input type="checkbox"
+                                           ng-model="colaborador.checado"></td>
                                 <td>{{colaborador.nome}}</td>
                                 <td>{{colaborador.email}}</td>
-                                <td><button class="btn btn-warning" ng-click="vm.carregarColaborador($index)" ng-disabled="vm.checkAlterar">Alterar</button></td>
-                                <td><button class="btn btn-danger" ng-click="vm.deletarColaborador($index)" ng-disabled="vm.checkAlterar">Deletar</button></td>
+                                <td><button class="btn btn-warning" ng-click="vm.carregarColaborador($index)" ng-disabled="vm.checkAlterar || colaborador.checado">Alterar</button></td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-danger" ng-click="vm.deletarColaborador()" ng-disabled="vm.checkAlterar">Deletar</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -88,6 +96,7 @@
             vm.limparColaborador = limparColaborador;
             vm.carregarColaborador = carregarColaborador;   
             vm.corInput = getCorInput;
+            vm.checado
 
             function getCorInput(color){
                 return {
@@ -98,7 +107,11 @@
             }
 
             function limparColaborador(){
-                    vm.colaborador = {nome:'',email:''};
+                    vm.colaborador = {
+                        nome:'',
+                        email:'',
+                        checado:''
+                    };
                     vm.checkAlterar = false;
                 }
 
@@ -108,10 +121,12 @@
                 vm.limparColaborador();
             }
 
-            function deletarColaborador(colaboradorId){
-                vm.listaColaboradores = vm.listaColaboradores.filter(function(param,index){
-                    if(vm.listaColaboradores[index] != vm.listaColaboradores[colaboradorId])
-                        return param;
+            function deletarColaborador(){
+                vm.listaColaboradores = vm.listaColaboradores.filter(function(colaborador){
+                    if(colaborador.checado == true)
+                        return false;
+                    else
+                        return true;
                 });
             }
 
