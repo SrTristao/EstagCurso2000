@@ -1,0 +1,161 @@
+<!--
+    Inserir checkbox na tabela,
+    remover coluna deletar,
+    selecionar quais linhas vc quer deletar,
+    adiconar um botao maior deletar
+    ao selecionar a linha mudar a cor dela e bloquear o alterar
+ -->
+ <!DOCTYPE html>
+ <html ng-app="crud">
+ <head>
+     <meta charset="utf-8">
+     <link rel="stylesheet" href="../bootstrap.min.css">
+     <script src="../angular.min.js"></script>
+     <title></title>
+     <style>
+          .color-row {
+               background-color: red;
+          }
+     </style>
+ </head>
+ <body ng-controller="colaboradoresController as vm">
+     <div class="container">
+         <div class="row">
+             <form class="col-md-6 col-md-offset-1"
+                 ng-init="vm.colaborador = {nome: '', email: '', checked: ''};">
+                 <div class="form-group">
+                     <label for="nome">Nome</label>
+                     <input type="text" class="form-control" id="nome" placeholder="Digite o nome"
+                     ng-model="vm.colaborador.nome">
+                 </div>
+                 <div class="form-group">
+                     <label for="email">Email</label>
+                     <input type="text" class="form-control" id="email" placeholder="Digite o nome"
+                     ng-model="vm.colaborador.email">
+                 </div>
+
+                 <button type="button" class="btn btn-primary"
+                     ng-show="!vm.checkAlterar"
+                     ng-click="vm.criaColaborador(vm.colaborador)">
+                     Salvar
+                 </button>
+
+                 <button type="button" name="editar" class="btn btn-primary"
+                     ng-show="vm.checkAlterar"
+                     ng-click="vm.alteraColaborador(vm.colaborador)">
+                     Alterar
+                 </button>
+
+                 <button type="button" class="btn btn-danger"
+                         ng-click="vm.limparColaborador()">
+                         Cancelar
+                 </button>
+             </form>
+
+             <div class="col-md-6 col-md-offset-3 group-form">
+                 <label for="search">Pesquisar</label>
+                 <input type="text" id="search" class="form-control" placeholder="Pesquisar Colaborador"
+                 ng-model="vm.searchColaborador">
+             </div>
+
+             <div class="col-md-6 col-md-offset-1">
+                 <table class="table table-hover">
+                     <thead>
+                         <tr>
+                             <th></th>
+                             <th>Nome</th>
+                             <th>Email</th>
+                             <th></th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                         <tr ng-repeat="colaborador in vm.listaColaboradores | filter: vm.searchColaborador" ng-class="{'color-row': colaborador.checked}">
+                             <td>
+                                  <div class="checkbox">
+                                       <input type="checkbox" ng-model="colaborador.checked">
+                                  </div>
+                             </td>
+                             <td>{{colaborador.nome}}</td>
+                             <td>{{colaborador.email}}</td>
+                             <td>
+                                 <button type="button" name="editar" class="btn btn-warning"
+                                 ng-click="vm.carregarColaborador($index)"
+                                 ng-disabled="vm.checkAlterar || colaborador.checked">
+                                 Editar
+                                 </button>
+                             </td>
+                         </tr>
+                     </tbody>
+                 </table>
+                 <button type="button" name="deletaTodos" class="btn btn-danger btn-block"
+                         ng-click="vm.deletaColaboradores()" ng-disabled="vm.checkAlterar">
+                      Excluir selecionados
+                 </button>
+             </div>
+
+         </div>
+     </div>
+ </body>
+ <script>
+ angular.module('crud' , [])
+ .controller('colaboradoresController' , colaboradoresController);
+
+ function colaboradoresController() {
+     var vm = this;
+
+     vm.listaColaboradores = [];
+     vm.criaColaborador = criaColaborador;
+     vm.deletaColaborador = deletaColaborador;
+     vm.alteraColaborador = alteraColaborador;
+     vm.carregarColaborador = carregarColaborador;
+     vm.limparColaborador = limparColaborador;
+     vm.deletaColaboradores = deletaColaboradores;
+     vm.checked
+
+
+     function criaColaborador(colaborador) {
+         colaborador.index = (vm.listaColaboradores.length + 1);
+         vm.listaColaboradores.push(angular.copy(colaborador));
+
+         limparColaborador();
+     }
+
+     function deletaColaborador(colaboradorId) {
+         vm.listaColaboradores.splice(colaboradorId - 1 , 1);
+     }
+
+     function deletaColaboradores() {
+          vm.listaColaboradores = vm.listaColaboradores.filter(function (obj) {
+               return !obj.checked;
+          });
+     }
+
+     function alteraColaborador(colaborador) {
+         vm.listaColaboradores = vm.listaColaboradores.map(function (param , index) {
+             if (vm.listaColaboradores[index].index == colaborador.index) {
+                 return colaborador;
+             } else {
+                 return param;
+             }
+         });
+
+         limparColaborador();
+     }
+
+     function limparColaborador() {
+         vm.colaborador = {nome:'' , email:''};
+         vm.checkAlterar = false;
+     }
+
+     function carregarColaborador(colaboradorId) {
+         vm.colaborador = angular.copy(vm.listaColaboradores.find(function (param , index) {
+             if (vm.listaColaboradores[index] == vm.listaColaboradores[colaboradorId]) {
+                 return param;
+             }
+         }));
+
+         vm.checkAlterar = true;
+     }
+ }
+ </script>
+ </html>
