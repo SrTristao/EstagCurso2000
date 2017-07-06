@@ -1,0 +1,153 @@
+<html ng-app="crud">
+    <head></head>
+    <link rel="stylesheet" href="../bootstrap.min.css"/>
+    <script src="../angular.min.js"></script>
+    <style>
+        .title-app{
+            color: red;
+            font-size: 23px;
+            margin-bottom: 10px;
+        }
+        .title-app2{
+            color: yellow;
+            font-size: 23px;
+            margin-bottom: 10px;
+        }
+        .corLinha{
+            color: red;
+            background-color:blue;
+        }
+    </style>
+    <body ng-controller="colaboradoresController as vm">
+    <label col-lg-offset-5"
+           ng-class="{'title-app': vm.colaborador.nome, 'title-app2': vm.colaborador.email}">EstagCurso2000</label>
+        <div class="conteiner">
+            <div class="row">
+                <form class="col-lg-6 col-lg-offset-3" ng-init="vm.colaborador = {nome:'', email:'', checado:''};">
+                    <div class="form-group">
+                        <label for="nome">Nome: </label>
+                        <input type="text" class="form-control" id="nome" placeholder="Digite o nome do colaborador" 
+                               ng-model="vm.colaborador.nome"
+                               ng-style="vm.corInput('red')"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email: </label>
+                        <input type="text" class="form-control" id="email" placeholder="Digite o email do colaborador" 
+                               ng-model="vm.colaborador.email"
+                               ng-style="vm.corInput('white')"//>
+                    </div>
+                    <button class="btn btn-primary" 
+                            ng-click="vm.criarColaborador(vm.colaborador)"
+                            ng-show="!vm.checkAlterar">Salvar</button>
+                    
+                    <button class="btn btn-primary" 
+                            ng-click="vm.alterarColaborador(vm.colaborador)" 
+                            ng-show="vm.checkAlterar">Alterar</button>
+                    
+                    <button class="btn btn-danger" ng-click="vm.limparColaborador()">Cancelar</button>
+                </form>
+                <div class="col-lg-6 col-lg-offset-3 group-form">
+                <label for="search">Pesquisar:</label>
+                <input type="text" id="search" placeholder="Pesquisar colaborador"
+                       ng-model="vm.searchColaborador" class="form-control" />
+                </div>
+                
+                <div class="col-lg-6 col-lg-offset-3">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Excluir</th>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr  ng-repeat="colaborador in vm.listaColaboradores | filter:vm.searchColaborador" ng-class="{'corLinha':colaborador.checado}">
+                                <td><input type="checkbox"
+                                           ng-model="colaborador.checado"></td>
+                                <td>{{colaborador.nome}}</td>
+                                <td>{{colaborador.email}}</td>
+                                <td><button class="btn btn-warning" ng-click="vm.carregarColaborador($index)" ng-disabled="vm.checkAlterar || colaborador.checado">Alterar</button></td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-danger" ng-click="vm.deletarColaborador()" ng-disabled="vm.checkAlterar">Deletar</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </body>
+
+
+    <script>
+        angular.module('crud', [])
+        .controller('colaboradoresController', colaboradoresController);
+
+        function colaboradoresController(){
+            var vm = this;
+            vm.listaColaboradores = [];
+            vm.checkAlterar = false;
+            vm.criarColaborador = criarColaborador;
+            vm.deletarColaborador = deletarColaborador;
+            vm.alterarColaborador = alterarColaborador;
+            vm.limparColaborador = limparColaborador;
+            vm.carregarColaborador = carregarColaborador;   
+            vm.corInput = getCorInput;
+            vm.checado
+
+            function getCorInput(color){
+                return {
+                    'color': color,
+                    'font-size':'18px',
+                    'background-color':'black'
+                }
+            }
+
+            function limparColaborador(){
+                    vm.colaborador = {
+                        nome:'',
+                        email:'',
+                        checado:''
+                    };
+                    vm.checkAlterar = false;
+                }
+
+            function criarColaborador(colaborador){
+                colaborador.index = (vm.listaColaboradores.length+1);
+                vm.listaColaboradores.push(angular.copy(colaborador));
+                vm.limparColaborador();
+            }
+
+            function deletarColaborador(){
+                vm.listaColaboradores = vm.listaColaboradores.filter(function(colaborador){
+                    if(colaborador.checado == true)
+                        return false;
+                    else
+                        return true;
+                });
+            }
+
+            function carregarColaborador(colaboradorId){              
+                vm.colaborador = angular.copy(vm.listaColaboradores.find(function(param,index){
+                    if(vm.listaColaboradores[index] == vm.listaColaboradores[colaboradorId])
+                    return param;
+                }));
+                vm.checkAlterar = true;
+            }
+
+            function alterarColaborador(colaborador){
+                vm.listaColaboradores = vm.listaColaboradores.map(function(param,index){
+                    if(vm.listaColaboradores[index].index == colaborador.index)
+                        return colaborador
+                    else
+                        return param;
+                });
+                vm.limparColaborador();
+            }
+
+        }
+    </script>
+</html>
