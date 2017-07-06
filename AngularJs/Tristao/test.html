@@ -1,0 +1,107 @@
+<html ng-app="crud">
+    <head></head>
+    <link rel="stylesheet" href="../bootstrap.min.css"/>
+    <link rel="stylesheet" href="../node_modules/ui-select/dist/select.min.css"/>    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.default.css">
+    <script src="../angular.min.js"></script>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/angular-sanitize/angular-sanitize.min.js"></script>
+    <script src="../node_modules/ui-select/dist/select.min.js"></script> 
+    <script src="../UI-Dropdown-master/dropdown.min.js"></script>    
+    
+    <body ng-controller="colaboradoresController as vm">
+        {{vm.listaColaboradores}}
+        <div class="ui container">
+            <select id="select-tp" class="ui selection dropdown">
+                <option value="male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+        </div>
+        <ui-select ng-model="vm.selected" theme="selectize" title="Escolha sua faculdade">
+            <ui-select-match placeholder="ESCOLHA SUA FACULDADE">{{$select.selected.nome}}</ui-select-match>
+            <ui-select-choices repeat="colaborador in vm.listaColaboradores | filter:$select.search">
+                <span ng-bind-html="colaborador.nome | highlight: $select.search"></span>                
+            </ui-select-choices>
+        </ui-select> 
+        {{vm.selected}}
+    </body> 
+    <script>
+    
+        var app = angular.module('crud', ['ngSanitize','ui.select']);
+       
+       app.controller('colaboradoresController', colaboradoresController);
+
+       function colaboradoresController() {
+           var vm = this;
+           vm.listaColaboradores = [{id: 1, nome: 'A', test:'joao'},
+                                    {id: 2, nome: 'B'},
+                                    {id: 3, nome: 'C'},
+                                    {id: 4, nome: 'D'},];   
+           vm.checkAlterar = false;        
+           vm.criarColaborador = criarColaborador;
+           vm.deletarColaborador = deletarColaborador;
+           vm.alterarColaborador = alterarColaborador;
+           vm.carregarColaborador = carregarColaborador;
+           vm.limparColaborador = limparColaborador;
+           vm.search;
+           vm.selected;
+           
+           function querySearch (query) {
+            var results = query ? self.states.filter( createFilterFor(query) ) : self.states,
+            deferred;
+            if (self.simulateQuery) {
+                deferred = $q.defer();
+                $timeout(function () { deferred.resolve( results ); }, Math.random() * 1000, false);
+                return deferred.promise;
+            } else {
+                return results;
+            }
+           }
+            function createFilterFor(query) {
+                var lowercaseQuery = angular.lowercase(query);
+
+                return function filterFn(state) {
+                return (state.value.indexOf(lowercaseQuery) === 0);
+                };
+
+            }
+           function limparColaborador() {
+               vm.colaborador = {nome: '', email: ''};
+               vm.checkAlterar = false;  
+           }
+
+           function criarColaborador(colaborador) {
+               colaborador.index = (vm.listaColaboradores.length+1);
+               vm.listaColaboradores.push(angular.copy(colaborador));
+               vm.limparColaborador();            
+           }
+
+           function deletarColaborador(colaboradorId){
+               vm.listaColaboradores = vm.listaColaboradores.filter(function(param, index) {
+                   if (vm.listaColaboradores[index] != vm.listaColaboradores[colaboradorId])
+                    return param;
+               });
+           }
+
+           function carregarColaborador(colaboradorId) {
+               vm.colaborador = angular.copy(vm.listaColaboradores.find(function(param, index) {
+                   if (vm.listaColaboradores[index] == vm.listaColaboradores[colaboradorId])
+                    return param;
+               }));
+               vm.checkAlterar = true;
+           }
+
+           function alterarColaborador(colaborador) {
+               vm.listaColaboradores = vm.listaColaboradores.map(function(param, index) {
+                   if (vm.listaColaboradores[index].index == colaborador.index)
+                    return colaborador
+                  else
+                    return param;
+               });
+               vm.limparColaborador();
+           }
+       }
+        $('#select-tp').dropdown();
+    </script>
+</html>

@@ -1,0 +1,19 @@
+
+<button id="{{dropdownSearchCtrl.dropdownId}}" class="buttonDropdown" 
+        ng-style="{'width':'{{dropdownSearchCtrl.dropdownWidth}}', 'height': '{{dropdownSearchCtrl.dropdownHeight}}'}" >{{dropdownSearchCtrl.dropdownModel}}<i class="fa fa-caret-down" style="right: 0"></i></button>  
+<div id="{{dropdownSearchCtrl.dropdownId}}-div" class="dropdownSearch" ng-style="{'width':2++'{{dropdownSearchCtrl.dropdownWidth}}'}">                           
+      <div class="listItems">
+        <input id="{{dropdownSearchCtrl.dropdownId}}-search" ng-model-options="{debounce: 500}"; ng-style="{'width':'{{dropdownSearchCtrl.dropdownWidth}}'-6}" maxlength="20" id="search" type="text" ng-model="searchDropdown" placeholder=""/>
+        <div class="containerDropdown">
+            <table>
+                <tbody>
+                    <tr ng-repeat="itemDropdown in filtered =  (dropdownSearchCtrl.data | orderBy: dropdownSearchCtrl.dropdownDesc == false ? 'id' : '-id' | filter: searchDropdown)" >
+                        <td ng-style="{'width':'{{dropdownSearchCtrl.dropdownWidth}}'-6}" ng-click="clickItem(itemDropdown);">{{itemDropdown.name}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>        
+        <p ng-style="{'width':'{{dropdownSearchCtrl.dropdownWidth}}'-6}"  ng-show="filtered.length == 0 && dropdownSearchCtrl.showMessage == false">{{'noResultsMatch' | translate}} "{{searchDropdown}}"</p> 
+        <p ng-show="dropdownSearchCtrl.showMessage" >{{'theAreNoResults' | translate}}<br> {{'returned' | translate}}</p> 
+      </div>      
+</div>

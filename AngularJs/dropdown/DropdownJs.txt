@@ -1,0 +1,104 @@
+function autobahnDropdownSearchDirective() {
+    'use restrict'
+    var inject = ['$scope', '$attrs'];
+        
+    function dropdownSearchController($scope, $attrs){
+        var ctrl = this;            
+        
+        if ($scope.dropdownSearchCtrl.dropdownDesc == '' ||
+            $scope.dropdownSearchCtrl.dropdownDesc == undefined) {
+            $scope.dropdownSearchCtrl.dropdownDesc = false;
+        }
+        
+        if ($scope.dropdownSearchCtrl.dropdownWidth == '' || 
+            $scope.dropdownSearchCtrl.dropdownWidth == undefined) {
+            $scope.dropdownSearchCtrl.dropdownWidth = '120';
+        }
+        
+        if ($scope.dropdownSearchCtrl.dropdownHeight == '' ||
+            $scope.dropdownSearchCtrl.dropdownHeight == undefined) {
+            $scope.dropdownSearchCtrl.dropdownHeight = '25';
+        }
+                
+        $scope.searchDropdown = '';                                    
+        
+        $scope.clickItem = function(item) {               
+            var apiMethods = $scope.dropdownSearchCtrl.apiMethods;            
+            // Send the item data clicked                         
+            apiMethods.itemClicked(item);            
+            // Clear input and close dropdown            
+            $scope.clickButton();
+        }
+        
+       
+    }   
+    function linker(scope, element) {        
+        scope.$watch(scope.dropdownSearchCtrl.dropdownId, function() {            
+            scope.clearSearch = function(param) {            
+                $('#search').val('');
+                scope.searchDropdown = '';
+                if (param == 'jQuery') {
+                    scope.$apply();
+                }
+            };
+            //close last dropdown opened before open next;
+            var closeDropdown = function(param) {
+                var dropdowns = document.querySelectorAll('.dropdownSearch.hoverDiv');                  
+                for(var i=0; i < dropdowns.length; i++) {
+                    if (param != dropdowns[0].getAttribute('id').replace('-div','')) {
+                        $('#'+dropdowns[0].getAttribute('id')).removeClass('hoverDiv');                    
+                        $('#'+dropdowns[0].getAttribute('id').replace('-div','')).removeClass('hover');                    
+                    }
+                }               
+            }
+            scope.clickButton = function() {        
+                scope.clearSearch('angular');            
+                $('#'+scope.dropdownSearchCtrl.dropdownId+"-div").removeClass("hoverDiv");
+            }      
+            $("#"+scope.dropdownSearchCtrl.dropdownId).click(function (e) {                 
+                closeDropdown(scope.dropdownSearchCtrl.dropdownId);
+                scope.clearSearch('jQuery');                
+                $(this).toggleClass('hover');                
+                $('#'+scope.dropdownSearchCtrl.dropdownId+"-div").toggleClass("hoverDiv");
+                e.stopPropagation();
+                $("#"+scope.dropdownSearchCtrl.dropdownId+"-search").focus();
+            });           
+            $(document).on('click', function (e) { 
+                scope.clearSearch('jQuery');               
+                if (!$(e.target).closest('.hoverDiv').length) {                   
+                    $('#'+scope.dropdownSearchCtrl.dropdownId+"-div").removeClass("hoverDiv");
+                    $("#"+scope.dropdownSearchCtrl.dropdownId).removeClass('hover');
+                }
+            });
+            
+            
+        });
+        
+        scope.$watch("dropdownSearchCtrl.data", function(){
+           if (scope.dropdownSearchCtrl.data.length == 0) {
+                scope.dropdownSearchCtrl.showMessage = true;
+            } else {
+                scope.dropdownSearchCtrl.showMessage = false;
+            }                         
+        });
+    }
+    dropdownSearchController.$inject = inject;
+    return {
+        templateUrl: "scripts/directives/autobahnDropdownSearch/autobahnDropdownSearch.html",
+        restrict: "E", 
+        link: linker,
+        scope: {         
+         dropdownId: "@",
+         dropdownWidth: "@",
+         dropdownHeight: "@",
+         dropdownDesc: "@",         
+         data: "=",
+         dropdownModel: "=",
+         apiMethods: "="
+        },
+        bindToController: true,
+        controller: dropdownSearchController,
+        controllerAs: 'dropdownSearchCtrl'                
+    }
+}
+angular.module('dbConvertiblesApp').directive('autobahnDropdownSearch', autobahnDropdownSearchDirective);

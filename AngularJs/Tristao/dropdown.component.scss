@@ -1,0 +1,35 @@
+.dropdown-search {
+    
+    .dropdown-container {
+         width: 100%;
+        border: 1px solid black;
+        border-radius: 9px;     
+    }
+    .dropdown-container-list {
+            max-height: 200px;
+            height: auto;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            display: none;
+    }
+    .showDropdown {
+        display: block;
+    }
+    .dropdown-list {
+        cursor: pointer;            
+    }
+    .dropdown-list:hover{
+        background-color: yellow;
+    }
+    input{
+        border: none;
+        outline: none;
+        width: 90%;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    label {
+        margin-left: 10px;
+        width: 90%;        
+    }
+}

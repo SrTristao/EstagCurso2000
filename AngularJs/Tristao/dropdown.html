@@ -1,0 +1,135 @@
+<html ng-app="crud">
+    <head></head>
+    <link rel="stylesheet" href="../bootstrap.min.css"/>
+    <script src="../angular.min.js"></script>
+    <script src="../node_modules/jquery/dist/jquery.js"></script>
+    <style>
+        .container-dropdown {
+            max-height: 200px;
+            height: auto;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            display: none;
+        }
+        .showDropdown {
+            display: block;
+        }
+        .test {
+            cursor: pointer;            
+        }
+        .test:hover{
+            background-color: yellow;
+        }
+        input{
+            border: none;
+            outline: none;
+            width: 100%;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+    </style>
+    <body ng-controller="colaboradoresController as vm" style="width: 100%;">       
+        <dropdown-search id="faculdade" items="vm.colaboradores" selected="vm.selected"
+    </body>
+    
+    <script>
+    
+        var app = angular.module('crud', []);
+       
+       app.controller('colaboradoresController', colaboradoresController);
+
+       function colaboradoresController($document, $scope) {
+           var vm = this;
+           vm.listaColaboradores = [{ID: 1, Nome: 'A', test:'joao'},
+                                    {ID: 2, Nome: 'B'},
+                                    {ID: 3, Nome: 'C'},
+                                    {ID: 4, Nome: 'D'},
+                                   {ID: 5, Nome: 'E'},
+                                   {ID: 6, Nome: 'F'},
+                                   {ID: 7, Nome: 'G'},
+                                   {ID: 8, Nome: 'H'},
+                                   {ID: 9, Nome: 'I'},
+                                   {ID: 10, Nome: 'J'},
+                                   {ID: 11, Nome: 'K'},
+                                   {ID: 12, Nome: 'L'},];
+           vm.checkAlterar = false;        
+           vm.criarColaborador = criarColaborador;
+           vm.deletarColaborador = deletarColaborador;
+           vm.alterarColaborador = alterarColaborador;
+           vm.carregarColaborador = carregarColaborador;
+           vm.limparColaborador = limparColaborador;
+           vm.search;
+           vm.selected;           
+           
+           function limparColaborador() {
+               vm.colaborador = {nome: '', email: ''};
+               vm.checkAlterar = false;  
+           }
+
+           function criarColaborador(colaborador) {
+               colaborador.index = (vm.listaColaboradores.length+1);
+               vm.listaColaboradores.push(angular.copy(colaborador));
+               vm.limparColaborador();            
+           }
+
+           function deletarColaborador(colaboradorId){
+               vm.listaColaboradores = vm.listaColaboradores.filter(function(param, index) {
+                   if (vm.listaColaboradores[index] != vm.listaColaboradores[colaboradorId])
+                    return param;
+               });
+           }
+
+           function carregarColaborador(colaboradorId) {
+               vm.colaborador = angular.copy(vm.listaColaboradores.find(function(param, index) {
+                   if (vm.listaColaboradores[index] == vm.listaColaboradores[colaboradorId])
+                    return param;
+               }));
+               vm.checkAlterar = true;
+           }
+
+           function alterarColaborador(colaborador) {
+               vm.listaColaboradores = vm.listaColaboradores.map(function(param, index) {
+                   if (vm.listaColaboradores[index].index == colaborador.index)
+                    return colaborador
+                  else
+                    return param;
+               });
+               vm.limparColaborador();
+           }
+       }
+        app.component('dropdownSearch', {
+           templateUrl: 'C:\projetos\EstagCurso2000\AngularJs\Tristao\dropdown.component.html',
+           bindings: {
+               id: "@",
+               selected: "=",
+               items: "="
+           },
+           controller: function($scope) {
+               var vm=this;
+               vm.clickDropdown = clickDropdown;
+
+               function clickDropdown(item) {
+                   vm.selected = item.ID; 
+                   angular.element(document.getElementById('dropdown-'+vm.id+'-container-list-')).removeClass('showDropdown');
+               }
+
+               angular.element(document.getElementById('input-dropdown-'+vm.id)).on('click', function(e){               
+                    angular.element(document.getElementById('dropdown-'+vm.id+'-container-list-')).addClass('showDropdown'); 
+               });
+
+               angular.element(document).on('click', function(event){               
+                   if(event.target.id.indexOf(vm.id) < 0) {
+                       angular.element(document.getElementById('dropdown-'+vm.id+'-container-list-')).removeClass('showDropdown');
+
+                       if(!vm.search && vm.inputPlaceholder) {                   
+                           vm.search = vm.inputPlaceholder;
+                           $scope.$apply();
+                        }                   
+                    }
+               })           
+           },
+           controllerAs: 'vm'
+                  
+    });       
+    </script>
+</html>

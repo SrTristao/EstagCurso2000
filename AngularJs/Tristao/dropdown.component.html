@@ -1,0 +1,15 @@
+<div class="dropdown-search">   
+    <div class="dropdown-container">
+        <input id="input-dropdown-{{vm.id}}" type="text"
+        placeholder="{{vm.inputPlaceholder}}"
+        ng-model="vm.search;"
+        ng-click="vm.search = '';">
+        <div id="dropdown-{{vm.id}}-container-list" class="dropdown-container-list">
+            <div class="dropdown-list"
+                 ng-repeat="item in vm.items | filter:vm.search | order by: 'Nome'"
+                 ng-click="vm.search = item.Nome; vm.inputPlaceholder = item.Nome; vm.clickDropdown(item);" >
+                <label id="dropdown-{{vm.id}}-item-{{$index}}">{{item.Nome}}</label>
+            </div>
+        </div>
+    </div>    
+</div>

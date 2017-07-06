@@ -1,16 +1,43 @@
 <html ng-app='app'>
     <head></head>
-    <script src="../angular.min.js"></script>
+    <link rel="stylesheet" href="../bootstrap.min.css"/>
+    <script src="../angular.min.js"></script>    
+    <style>
+        .title-app {
+            color: red;
+            font-size: 23px;
+            margin-bottom: 10px;
+        }
+    </style>
     <body ng-controller="pessoasController">
-        <div ng-controller="estagiariosController">
-            <h1> {{title}} </h1>
+        <label class="title-app">EstagCurso2000</label>
+        <form>
+          <div class="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+          </div>
+          <div class="form-group">
+            <label for="exampleInputFile">File input</label>
+            <input type="file" id="exampleInputFile">
+            <p class="help-block">Example block-level help text here.</p>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox"> Check me out
+            </label>
+          </div>
+          <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+        <div ng-controller="homeController as vm">
+            {{vm.tersariol}}
         </div>
-        <h1> {{title}} </h1>        
-       <input data-ng-model="nome"/>       
-       {{nome | noString}}
     </body> 
     <script>
-        angular.module('app', [])
+        angular.module('app', ['app.home'])
             .filter('noString', function() {
                 return function(texto) {
                     return texto != undefined ? 
@@ -23,5 +50,16 @@
             .controller('estagiariosController', ['$scope', function($scope) {
                 $scope.title = 'Controller Estag';
             }]);
+        
+        angular.module('app.home',[])
+        .controller('homeController', homeController);
+        
+        homeController.$inject = [];
+        
+        function homeController() {
+          var vm = this;
+            
+            vm.tersariol = 'Tersariol';
+        };
     </script>
 </html>

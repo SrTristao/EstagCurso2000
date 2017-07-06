@@ -1,0 +1,63 @@
+<html ng-app="crud">
+    <head></head>
+    <link rel="stylesheet" href="../bootstrap.min.css"/>
+    <script src="../angular.min.js"></script>    
+    <body ng-controller="colaboradoresController as vm">        
+            <div class="row">   
+                <div class="col-xs-1" style="background-color:yellow">Col-lg-1</div>
+                <div class="col-xs-10" style="background-color:white">Col-lg-10</div>
+                <div class="col-xs-1" style="background-color:yellow">Col-lg-1</div>              
+            </div>                                    
+    </body> 
+    <script>
+       angular.module('crud', [])
+       .controller('colaboradoresController', colaboradoresController);
+
+       function colaboradoresController() {
+           var vm = this;
+           vm.listaColaboradores = [];   
+           vm.checkAlterar = false;        
+           vm.criarColaborador = criarColaborador;
+           vm.deletarColaborador = deletarColaborador;
+           vm.alterarColaborador = alterarColaborador;
+           vm.carregarColaborador = carregarColaborador;
+           vm.limparColaborador = limparColaborador;
+
+           function limparColaborador() {
+               vm.colaborador = {nome: '', email: ''};
+               vm.checkAlterar = false;  
+           }
+
+           function criarColaborador(colaborador) {
+               colaborador.index = (vm.listaColaboradores.length+1);
+               vm.listaColaboradores.push(angular.copy(colaborador));
+               vm.limparColaborador();            
+           }
+
+           function deletarColaborador(colaboradorId){
+               vm.listaColaboradores = vm.listaColaboradores.filter(function(param, index) {
+                   if (vm.listaColaboradores[index] != vm.listaColaboradores[colaboradorId])
+                    return param;
+               });
+           }
+
+           function carregarColaborador(colaboradorId) {
+               vm.colaborador = angular.copy(vm.listaColaboradores.find(function(param, index) {
+                   if (vm.listaColaboradores[index] == vm.listaColaboradores[colaboradorId])
+                    return param;
+               }));
+               vm.checkAlterar = true;
+           }
+
+           function alterarColaborador(colaborador) {
+               vm.listaColaboradores = vm.listaColaboradores.map(function(param, index) {
+                   if (vm.listaColaboradores[index].index == colaborador.index)
+                    return colaborador
+                  else
+                    return param;
+               });
+               vm.limparColaborador();
+           }
+       }
+    </script>
+</html>
